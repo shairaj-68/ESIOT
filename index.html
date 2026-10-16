@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design and Implementation in Embedded Development | Interactive ECE Learning</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#14202b;--mute:#4d5b68;--pri:#0e6b6b;--pri2:#0a4f4f;--key:#fff3c4;--keyb:#c99700;--ok:#1b7f3b;--bad:#b3261e;--line:#d5dde3;--code:#eef2f5}
+@media(prefers-color-scheme:dark){:root{--bg:#0f161c;--card:#18222b;--ink:#e6edf2;--mute:#9fb0be;--pri:#4cc2c2;--pri2:#2e9c9c;--key:#3a3213;--keyb:#c99700;--ok:#58d17a;--bad:#ff8a80;--line:#2c3a46;--code:#1f2b35}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;font:16px/1.65 "Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:#0a3d3d;color:#fff;padding:36px 20px 28px}
+header .in,main,nav .in{max-width:1000px;margin:0 auto}
+header h1{margin:0 0 6px;font-size:clamp(1.6rem,4vw,2.4rem);line-height:1.2}
+header p{margin:4px 0;color:#cfe6e6}
+header ul{margin:12px 0 0;padding-left:20px;columns:2;column-gap:28px}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);z-index:5}
+nav .in{display:flex;gap:4px;overflow-x:auto;padding:8px 12px}
+nav a{white-space:nowrap;padding:6px 10px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:.9rem}
+nav a:hover,nav a:focus-visible{background:var(--pri);color:#fff;outline:none}
+main{padding:12px 16px 60px}
+section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px;margin:20px 0}
+h2{margin:0 0 12px;color:var(--pri);font-size:1.5rem}
+h3{margin:20px 0 6px;font-size:1.1rem}
+p,li{max-width:76ch}
+.key{background:var(--key);border-left:4px solid var(--keyb);padding:10px 14px;border-radius:4px;margin:12px 0}
+.eq{background:var(--code);padding:10px 14px;border-radius:6px;margin:8px 0;font-family:Cambria,"Times New Roman",serif;font-size:1.08rem;overflow-x:auto}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.92em}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.94rem}
+.tw{overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+figure{margin:14px 0}
+figure svg{width:100%;height:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+figcaption{font-size:.88rem;color:var(--mute);margin-top:4px}
+details{border:1px solid var(--line);border-radius:8px;padding:8px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+details[open]>summary{margin-bottom:6px}
+.q{border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:12px 0}
+.q legend{font-weight:600;padding:0 6px}
+.q label{display:block;padding:4px 0;cursor:pointer}
+.q.ok{border-color:var(--ok);border-left-width:6px}
+.q.bad{border-color:var(--bad);border-left-width:6px}
+.q.na{border-color:var(--keyb);border-left-width:6px}
+.ex{display:none;margin-top:8px;font-size:.94rem}
+.q.ok .ex,.q.bad .ex,.q.na .ex{display:block}
+.tag{font-size:.75rem;padding:1px 8px;border-radius:10px;border:1px solid var(--line);margin-left:6px}
+button{background:var(--pri);color:#fff;border:0;border-radius:6px;padding:9px 16px;font-size:1rem;cursor:pointer;margin:6px 8px 6px 0}
+button.alt{background:var(--mute)}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:3px solid var(--keyb);outline-offset:2px}
+.score{font-weight:700;font-size:1.1rem;margin:8px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+footer{text-align:center;color:var(--mute);font-size:.85rem;padding:20px}
+@media(max-width:600px){header ul{columns:1}section{padding:16px}}
+@media print{nav,button,.nobtn{display:none}body{background:#fff;color:#000}section{break-inside:avoid-page;border:1px solid #999}details{display:block}details>*{display:block}.ex{display:block}header{background:#fff;color:#000}header p{color:#000}h2{color:#000}}
+</style>
+</head>
+<body>
+<header><div class="in">
+<p>Subject: Embedded Systems &nbsp;|&nbsp; Unit: System Design &amp; Implementation &nbsp;|&nbsp; B.E./B.Tech ECE</p>
+<h1>Design and Implementation in Embedded Development</h1>
+<p>From requirements to a tested, field-ready microcontroller product. For college students, GATE aspirants and core-electronics interview candidates.</p>
+<ul>
+<li>Describe the embedded design lifecycle and HW/SW partitioning</li>
+<li>Read an embedded system block diagram</li>
+<li>Calculate timer, baud, ADC, ISR-load and power figures</li>
+<li>Write safe ISR and driver code patterns</li>
+<li>Answer GATE-style and interview questions on the topic</li>
+</ul>
+</div></header>
+<nav><div class="in">
+<a href="#intro">Introduction</a><a href="#diagram">Block diagram</a><a href="#working">Working</a><a href="#waveforms">Timing</a><a href="#equations">Equations</a><a href="#solved">Solved problems</a><a href="#gate">GATE</a><a href="#interview">Interview</a><a href="#apps">Applications</a><a href="#quiz">Quiz</a><a href="#revision">Revision</a>
+</div></nav>
+<main>
+
+<section id="intro"><h2>1. Introduction</h2>
+<p>An <b>embedded system</b> is a computer built into a larger product to perform a dedicated function under real-time, memory, power and cost limits. <b>Design</b> decides what the hardware and firmware must do and how the work is split; <b>implementation</b> turns that decision into schematics, PCB, drivers, application code and tests.</p>
+<p><b>Operating principle:</b> sensors convert physical quantities to voltages; the microcontroller (MCU) samples them, runs control logic, and drives actuators or communication links. Events are handled either by polling or by interrupts, and timing is derived from a clock and hardware timers.</p>
+<div class="key"><b>Why it matters:</b> most electronic products ship with an MCU. Core companies hire for the ability to move from a requirement to working, debuggable hardware and firmware.</div>
+<h3>Prerequisites</h3><p>Digital logic, number systems, basic C, microprocessor basics, ADC/DAC fundamentals.</p>
+<h3>Key terms</h3>
+<div class="tw"><table><tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>MCU / SoC</td><td>CPU, memory and peripherals on one chip</td></tr>
+<tr><td>Firmware</td><td>Software stored in non-volatile memory that runs on the MCU</td></tr>
+<tr><td>ISR</td><td>Interrupt service routine: handler run on a hardware event</td></tr>
+<tr><td>Latency / jitter</td><td>Delay from event to response / variation of that delay</td></tr>
+<tr><td>HAL / BSP</td><td>Hardware abstraction layer / board support package</td></tr>
+<tr><td>RTOS</td><td>Operating system with deterministic scheduling</td></tr>
+<tr><td>WDT / BOR</td><td>Watchdog timer / brown-out reset</td></tr>
+</table></div>
+<h3>Classification</h3>
+<ul><li>By architecture: 8-bit (AVR, 8051), 16-bit (MSP430), 32-bit (ARM Cortex-M, RISC-V)</li><li>By software model: bare-metal super-loop, interrupt-driven, RTOS-based, embedded Linux</li><li>By timing: hard real-time, firm real-time, soft real-time</li></ul>
+</section>
+
+<section id="diagram"><h2>2. System block diagram</h2>
+<figure>
+<svg viewBox="0 0 760 330" role="img" aria-label="Embedded system block diagram" font-family="Segoe UI,Arial" font-size="13">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0e6b6b"/></marker></defs>
+<g fill="none" stroke="#0e6b6b" stroke-width="2" marker-end="url(#ar)">
+<path d="M110 65H160"/><path d="M110 165H160"/><path d="M110 265H160"/>
+<path d="M600 65H650"/><path d="M600 165H650"/><path d="M600 265H650"/></g>
+<g fill="#e3f1f1" stroke="#0e6b6b" stroke-width="1.5">
+<rect x="10" y="40" width="100" height="50" rx="6"/><rect x="10" y="140" width="100" height="50" rx="6"/><rect x="10" y="240" width="100" height="50" rx="6"/>
+<rect x="650" y="40" width="100" height="50" rx="6"/><rect x="650" y="140" width="100" height="50" rx="6"/><rect x="650" y="240" width="100" height="50" rx="6"/></g>
+<rect x="160" y="15" width="440" height="300" rx="10" fill="#fff8e1" stroke="#c99700" stroke-width="2"/>
+<g fill="#fff" stroke="#8a6d00" stroke-width="1.2">
+<rect x="180" y="55" width="120" height="50" rx="5"/><rect x="320" y="55" width="120" height="50" rx="5"/><rect x="460" y="55" width="120" height="50" rx="5"/>
+<rect x="180" y="125" width="120" height="50" rx="5"/><rect x="320" y="125" width="120" height="50" rx="5"/><rect x="460" y="125" width="120" height="50" rx="5"/>
+<rect x="180" y="195" width="120" height="50" rx="5"/><rect x="320" y="195" width="120" height="50" rx="5"/><rect x="460" y="195" width="120" height="50" rx="5"/></g>
+<g fill="#14202b" text-anchor="middle">
+<text x="60" y="70">Sensors</text><text x="60" y="170">Switches</text><text x="60" y="270">Comm in</text>
+<text x="700" y="70">Actuators</text><text x="700" y="170">Display / LED</text><text x="700" y="270">Comm out</text>
+<text x="380" y="35" font-weight="700">Microcontroller</text>
+<text x="240" y="85">ADC</text><text x="380" y="85">CPU core</text><text x="520" y="85">Flash</text>
+<text x="240" y="155">GPIO</text><text x="380" y="155">Interrupt ctrl</text><text x="520" y="155">SRAM</text>
+<text x="240" y="225">Timers / PWM</text><text x="380" y="225">UART / SPI / I2C</text><text x="520" y="225">WDT / BOR</text>
+<text x="380" y="285" fill="#8a6d00">Clock and power supply (regulator, decoupling)</text></g>
+</svg>
+<figcaption>Figure 1: Generic microcontroller-based embedded system. Illustrative block diagram, not tied to a specific part.</figcaption></figure>
+<div class="tw"><table><tr><th>Block</th><th>Function</th></tr>
+<tr><td>Sensors, signal conditioning</td><td>Convert physical input to a voltage within ADC range; filter and scale</td></tr>
+<tr><td>ADC</td><td>Samples the analog voltage into a digital code</td></tr>
+<tr><td>CPU core</td><td>Executes firmware instructions</td></tr>
+<tr><td>Flash / SRAM</td><td>Non-volatile code and constants / volatile data and stack</td></tr>
+<tr><td>GPIO</td><td>Digital input and output pins</td></tr>
+<tr><td>Interrupt controller</td><td>Prioritises events and vectors the CPU to the ISR</td></tr>
+<tr><td>Timers / PWM</td><td>Time base, periodic events, pulse-width control</td></tr>
+<tr><td>UART / SPI / I²C</td><td>Serial links to PCs, memories, sensors</td></tr>
+<tr><td>WDT / BOR</td><td>Recover from software hang / low supply voltage</td></tr>
+<tr><td>Clock, power</td><td>Timing reference; clean, regulated supply with decoupling capacitors</td></tr></table></div>
+</section>
+
+<section id="working"><h2>3. Design and implementation workflow</h2>
+<ol>
+<li><b>Requirements:</b> inputs, outputs, accuracy, response time, power budget, cost, environment.</li>
+<li><b>Architecture and HW/SW partitioning:</b> choose the MCU by peripherals, memory, speed and power; decide what is done in hardware (timers, DMA) and what in firmware.</li>
+<li><b>Hardware design:</b> schematic, power tree, decoupling, reset and clock circuits, debug header (SWD/JTAG), PCB layout.</li>
+<li><b>Firmware design:</b> pick the model (super-loop, interrupts, RTOS); define layers: drivers, HAL, middleware, application.</li>
+<li><b>Implementation:</b> cross-compile on a host, flash via debugger, bring up clocks, GPIO, UART first.</li>
+<li><b>Test and debug:</b> unit tests, simulation, logic analyser, oscilloscope, in-circuit debugging, hardware-in-the-loop.</li>
+<li><b>Validation and release:</b> temperature, EMI, power-cycle and long-run tests; bootloader and update plan.</li>
+</ol>
+<h3>Polling versus interrupts</h3>
+<div class="tw"><table><tr><th></th><th>Polling</th><th>Interrupt-driven</th></tr>
+<tr><td>Response</td><td>Depends on loop time</td><td>Bounded by interrupt latency</td></tr>
+<tr><td>CPU use</td><td>Wastes cycles</td><td>CPU free or sleeping until event</td></tr>
+<tr><td>Complexity</td><td>Simple</td><td>Needs care: shared data, priorities</td></tr></table></div>
+<h3>Typical safe ISR pattern</h3>
+<pre class="eq" style="font-family:Consolas,monospace;font-size:.9rem">volatile uint8_t data_ready = 0;
+volatile uint16_t adc_value;
+
+void ADC_IRQHandler(void){      /* keep short */
+    adc_value  = ADC-&gt;DR;        /* read clears flag */
+    data_ready = 1;
+}
+int main(void){
+    init_clock(); init_gpio(); init_adc();
+    for(;;){
+        if(data_ready){ data_ready = 0; process(adc_value); }
+        enter_sleep();            /* wake on next interrupt */
+    }
+}</pre>
+<h3>Common misconceptions</h3>
+<ul><li>"Faster clock is always better": it raises power and EMI; choose the lowest adequate clock.</li><li>"<code>volatile</code> makes shared data atomic": it only stops compiler caching. Multi-byte data may need a critical section.</li><li>"The simulator proves the hardware works": it does not model supply noise, bounce or timing margins.</li></ul>
+<h3>Advantages and limits</h3>
+<p>Low cost, small size, low power and flexible firmware updates; limited by memory, CPU speed, real-time constraints, and debugging difficulty compared with PC software.</p>
+</section>
+
+<section id="waveforms"><h2>4. Timing diagram</h2>
+<figure>
+<svg viewBox="0 0 760 250" role="img" aria-label="Interrupt timing diagram" font-family="Segoe UI,Arial" font-size="13">
+<g stroke="#0e6b6b" stroke-width="2" fill="none">
+<path d="M60 60H200V30H230V60H700"/>
+<path d="M60 130H230V130H260V100H340V130H700"/>
+<path d="M60 210H260V180H340V210H700" stroke="#8a6d00"/></g>
+<g stroke="#999" stroke-dasharray="4 3"><path d="M200 20V230"/><path d="M260 20V230"/><path d="M340 20V230"/></g>
+<g fill="currentColor" style="fill:#14202b">
+<text x="8" y="50">IRQ</text><text x="8" y="120">CPU state</text><text x="8" y="200">GPIO pin</text>
+<text x="100" y="95">Main loop</text><text x="268" y="92">ISR</text><text x="420" y="120">Main loop resumes</text>
+<text x="203" y="15">event</text><text x="203" y="242">latency</text><text x="285" y="242">ISR time</text></g>
+</svg>
+<figcaption>Figure 2: Illustrative interrupt timing. Not measured data. Latency is the delay from IRQ to first ISR instruction; a GPIO toggle in the ISR lets you measure it on an oscilloscope.</figcaption></figure>
+<p>Observation: processor runs the main loop until the event, completes the current instruction, saves context, runs the ISR, restores context and resumes. Total CPU busy time per event = latency + ISR execution.</p>
+</section>
+
+<section id="equations"><h2>5. Key equations</h2>
+<h3>Timer overflow</h3>
+<div class="eq">f<sub>tick</sub> = f<sub>clk</sub> / P &nbsp;&nbsp; T<sub>ovf</sub> = 2<sup>N</sup> / f<sub>tick</sub></div>
+<p>f<sub>clk</sub> timer clock (Hz), P prescaler, N counter bits. Derivation: one tick lasts 1/f<sub>tick</sub>; the counter overflows after 2<sup>N</sup> ticks. Limit: P = 1 gives the finest resolution but the shortest range.</p>
+<h3>Fast PWM frequency</h3>
+<div class="eq">f<sub>PWM</sub> = f<sub>clk</sub> / (P · 2<sup>N</sup>) &nbsp;&nbsp; Duty = OCR / 2<sup>N</sup> (approx.)</div>
+<p>Phase-correct PWM counts up and down, so its frequency is half this value.</p>
+<h3>UART throughput</h3>
+<div class="eq">Bytes/s = baud / bits per frame &nbsp;&nbsp; 8N1 frame = 1 start + 8 data + 1 stop = 10 bits</div>
+<h3>ADC resolution</h3>
+<div class="eq">LSB = V<sub>ref</sub> / 2<sup>N</sup> &nbsp;&nbsp; Code = floor(V<sub>in</sub> / LSB) &nbsp;&nbsp; SNR<sub>ideal</sub> = 6.02N + 1.76 dB</div>
+<p>Nyquist: f<sub>s</sub> &gt; 2 f<sub>max</sub>. Quantisation error is at most ±½ LSB for an ideal converter.</p>
+<h3>ISR load and power</h3>
+<div class="eq">Load = (C<sub>ISR</sub> / f<sub>CPU</sub>) · f<sub>int</sub> &nbsp;&nbsp; I<sub>avg</sub> = I<sub>act</sub>·D + I<sub>sleep</sub>·(1 − D) &nbsp;&nbsp; Life = Capacity / I<sub>avg</sub></div>
+<p>C<sub>ISR</sub> cycles per ISR including entry and exit, f<sub>int</sub> interrupt rate, D active duty fraction. Load must stay well below 100%; interrupts must also finish before the next arrives.</p>
+</section>
+
+<section id="solved"><h2>6. Solved numerical problems</h2>
+<h3>Problem 1 (Easy): Timer overflow</h3>
+<p>An 8-bit timer runs from a 16 MHz clock with prescaler 64. Find the overflow period.<br>
+f<sub>tick</sub> = 16 MHz / 64 = 250 kHz, tick = 4 µs. T<sub>ovf</sub> = 256 × 4 µs = <b>1.024 ms</b>. Interpretation: a periodic 1 ms system tick needs a reload value, not a free-running overflow.</p>
+<h3>Problem 2 (Moderate): ADC resolution</h3>
+<p>A 12-bit ADC with V<sub>ref</sub> = 3.3 V reads a 10 mV/°C temperature sensor. Find the LSB, the code at 1.65 V and the temperature step per LSB.<br>
+LSB = 3.3 / 4096 = <b>0.806 mV</b>. Code = 1.65 / 3.3 × 4096 = <b>2048</b>. Step = 0.806 mV / (10 mV/°C) = <b>0.0806 °C</b>. Real accuracy is worse because of noise, reference error and sensor tolerance.</p>
+<h3>Problem 3 (Moderate): Battery life</h3>
+<p>A node draws 10 mA when active for 2% of the time and 5 µA asleep. A battery has 220 mAh. Estimate life.<br>
+I<sub>avg</sub> = 10 mA × 0.02 + 0.005 mA × 0.98 = 0.2 + 0.0049 = <b>0.2049 mA</b>. Life = 220 / 0.2049 ≈ 1074 h ≈ <b>44.7 days</b>. Interpretation: the active duty cycle dominates; halving it matters more than reducing sleep current.</p>
+<h3>Problem 4 (GATE-style, Difficult): ISR load</h3>
+<p>A 48 MHz CPU receives interrupts at 10 kHz. Each ISR takes 240 cycles including entry and exit. Find CPU load and the free time per period.<br>
+ISR time = 240 / 48 MHz = 5 µs. Period = 100 µs. Load = 5 / 100 = <b>5%</b>; free time = <b>95 µs</b> per period. Shortcut: Load = C<sub>ISR</sub> × f<sub>int</sub> / f<sub>CPU</sub> = 240 × 10⁴ / 48 × 10⁶ = 0.05.</p>
+</section>
+
+<section id="gate"><h2>7. GATE preparation: 10 original questions (interactive)</h2>
+<p>These are original practice questions, not previous-year GATE questions. Choose answers, then press Check. Each explanation includes the working.</p>
+<div id="gateQ"></div>
+<div class="nobtn"><button onclick="check('gateQ','gateS')">Check answers</button><button class="alt" onclick="reset('gateQ','gateS')">Reset</button></div>
+<div class="score" id="gateS" aria-live="polite"></div>
+<div class="key"><b>Frequently tested:</b> timer and PWM calculations, ADC LSB and code, UART frame efficiency, interrupt latency and nesting, <code>volatile</code>, bus protocols (I²C/SPI/UART), memory types, power calculations.</div>
+</section>
+
+<section id="interview"><h2>8. Core-company interview questions</h2>
+<p>Click a question to expand the answer.</p>
+<div id="ivQ"></div>
+<h3>Industry perspective</h3>
+<p>Real projects spend more effort on bring-up, debugging, validation and power than on feature code. Typical outputs: schematic reviews, board bring-up checklists, driver code, test scripts, and failure-analysis notes.</p>
+</section>
+
+<section id="apps"><h2>9. Applications and industry relevance</h2>
+<div class="grid">
+<div class="key"><b>Automotive</b><br>ECUs, BMS, body control; CAN/LIN buses; functional-safety and watchdog design.</div>
+<div class="key"><b>Industrial</b><br>PLCs, motor drives, sensors on RS-485/Modbus; long life and EMC robustness.</div>
+<div class="key"><b>Consumer and wearables</b><br>Fitness bands, smart-home nodes; battery life and BLE, OTA updates.</div>
+<div class="key"><b>Medical</b><br>Infusion pumps, glucose meters; reliability, traceability, safe fail states.</div>
+<div class="key"><b>Test and validation</b><br>Automated hardware test benches that drive devices over Bluetooth, UART or GPIO and log results.</div>
+<div class="key"><b>IoT / smart metering</b><br>Low-power sensors, LoRa/NB-IoT links, secure bootloaders.</div>
+</div>
+<p><b>Design considerations:</b> cost per unit, power budget, EMI, supply-chain availability, certification, and field-update strategy. <b>Common challenges:</b> intermittent bugs from race conditions, brown-outs, clock errors, noisy ADC readings, stack overflow, and hard-to-reproduce timing faults. <b>Roles:</b> embedded firmware engineer, hardware test/validation engineer, board bring-up engineer, FPGA/VLSI verification engineer, IoT engineer.</p>
+</section>
+
+<section id="quiz"><h2>10. Topic quiz (10 questions)</h2>
+<div id="topicQ"></div>
+<div class="nobtn"><button onclick="check('topicQ','topicS')">Check answers</button><button class="alt" onclick="reset('topicQ','topicS')">Reset quiz</button></div>
+<div class="score" id="topicS" aria-live="polite"></div>
+</section>
+
+<section id="revision"><h2>11. Revision materials</h2>
+<h3>Formula sheet</h3>
+<div class="tw"><table><tr><th>Quantity</th><th>Formula</th></tr>
+<tr><td>Timer overflow</td><td>2<sup>N</sup> · P / f<sub>clk</sub></td></tr>
+<tr><td>Fast PWM frequency</td><td>f<sub>clk</sub> / (P · 2<sup>N</sup>)</td></tr>
+<tr><td>UART bytes per second (8N1)</td><td>baud / 10</td></tr>
+<tr><td>ADC LSB</td><td>V<sub>ref</sub> / 2<sup>N</sup></td></tr>
+<tr><td>ISR load</td><td>C<sub>ISR</sub> · f<sub>int</sub> / f<sub>CPU</sub></td></tr>
+<tr><td>Average current</td><td>I<sub>act</sub>·D + I<sub>sleep</sub>(1 − D)</td></tr></table></div>
+<h3>Bus comparison</h3>
+<div class="tw"><table><tr><th>Bus</th><th>Wires</th><th>Addressing</th><th>Typical use</th></tr>
+<tr><td>UART</td><td>TX, RX</td><td>None (point to point)</td><td>Console, modules</td></tr>
+<tr><td>SPI</td><td>SCLK, MOSI, MISO, CS per slave</td><td>Chip select</td><td>Fast flash, displays, ADCs</td></tr>
+<tr><td>I²C</td><td>SDA, SCL (open-drain, pull-ups)</td><td>7/10-bit address</td><td>Sensors, EEPROM</td></tr>
+<tr><td>CAN</td><td>CANH, CANL differential</td><td>Message ID</td><td>Automotive, industrial</td></tr></table></div>
+<h3>Polling versus interrupt versus RTOS</h3>
+<p>Super-loop: simplest. Interrupts: fast reaction, low power. RTOS: many concurrent tasks with deadlines; costs RAM and needs synchronisation.</p>
+<h3>Quick notes and memory aids</h3>
+<ul><li>Short ISR: set flag, clear source, leave.</li><li>Shared with ISR: <code>volatile</code> plus atomic access.</li><li>Open-drain bus: pull-ups required.</li><li>Bring-up order: power, clock, reset, debug, GPIO, UART, the rest.</li><li>ADC rule: Nyquist, anti-alias filter, stable reference.</li></ul>
+<h3>Common errors and troubleshooting</h3>
+<div class="tw"><table><tr><th>Symptom</th><th>Likely cause and check</th></tr>
+<tr><td>MCU resets randomly</td><td>Brown-out or WDT not serviced; check supply on a scope</td></tr>
+<tr><td>No UART output</td><td>Wrong baud from clock error, TX/RX swapped, level mismatch</td></tr>
+<tr><td>I²C device not found</td><td>Missing pull-ups, wrong address (7-bit versus 8-bit form)</td></tr>
+<tr><td>Noisy ADC readings</td><td>No decoupling, high source impedance, no averaging</td></tr>
+<tr><td>Variable never changes in main</td><td>Missing <code>volatile</code> on ISR-shared variable</td></tr></table></div>
+</section>
+</main>
+<footer>Interactive ECE Learning: Design and Implementation in Embedded Development. All figures are illustrative; no simulation screenshot was supplied.</footer>
+
+<script>
+var GATE=[
+{d:"Easy",q:"Which memory holds the stack and local variables of a typical MCU program while it runs?",o:["Flash","SRAM","EEPROM","Mask ROM"],a:1,e:"SRAM is fast volatile RAM used for data and stack. Flash, EEPROM and ROM are non-volatile and mainly hold code or constants."},
+{d:"Easy",q:"An 8-bit timer is clocked at 1 MHz with no prescaler. Its overflow period is:",o:["128 µs","256 µs","255 µs","512 µs"],a:1,e:"Tick = 1 µs; overflow after 2⁸ = 256 ticks, so 256 µs. 255 µs is the common off-by-one trap."},
+{d:"Moderate",q:"A 10-bit ADC has V_ref = 5 V. The LSB size is approximately:",o:["4.88 mV","9.77 mV","2.44 mV","19.53 mV"],a:0,e:"LSB = 5 / 1024 = 4.88 mV. 9.77 mV is for 9 bits; 2.44 mV for 11 bits."},
+{d:"Moderate",q:"A UART runs at 115200 baud, 8N1, back to back. Maximum data rate is:",o:["14400 B/s","11520 B/s","115200 B/s","9216 B/s"],a:1,e:"Each byte needs 10 bits (start + 8 + stop): 115200 / 10 = 11520 B/s. 14400 ignores start and stop bits."},
+{d:"Moderate",q:"A 12-bit ADC with V_ref = 3.3 V sees 0.825 V. The output code is:",o:["512","1024","825","2048"],a:1,e:"0.825 / 3.3 = 0.25; 0.25 × 4096 = 1024."},
+{d:"Moderate",q:"A flag is written in an ISR and read in main(). The correct declaration includes:",o:["register","static only","volatile","const"],a:2,e:"volatile forces the compiler to re-read memory, so main() sees the ISR's write. static or const do not prevent caching in a register."},
+{d:"Moderate",q:"The main purpose of a watchdog timer is to:",o:["Speed up the clock","Reset the system if software stops servicing it","Filter ADC noise","Measure power"],a:1,e:"If firmware hangs and fails to refresh the WDT within its timeout, the WDT resets the MCU."},
+{d:"Difficult",q:"A 48 MHz CPU takes 20 kHz interrupts; each ISR needs 1500 cycles. CPU load due to this ISR is:",o:["31.25%","62.5%","75%","125%"],a:1,e:"ISR time = 1500 / 48 MHz = 31.25 µs; period = 50 µs; load = 62.5%. 31.25% is the trap of reading µs as a percentage."},
+{d:"Difficult",q:"A 16 MHz MCU with an 8-bit counter, no prescaler, in fast PWM mode, gives a PWM frequency of:",o:["62.5 kHz","31.25 kHz","16 kHz","125 kHz"],a:0,e:"f = 16 MHz / 256 = 62.5 kHz. Phase-correct mode would give about half (31.25 kHz): a common trap."},
+{d:"Difficult",q:"A device draws 10 mA for 1% of the time and 10 µA for 99%. The average current is approximately:",o:["110 µA","100 µA","10.1 mA","55 µA"],a:0,e:"10 mA × 0.01 = 100 µA; 10 µA × 0.99 = 9.9 µA; total = 109.9 µA, about 110 µA. Ignoring sleep current gives 100 µA."}];
+var TOPIC=[
+{q:"After the requirements specification, the next design step is:",o:["Mass production","Architecture design and HW/SW partitioning","Writing the user manual","Field maintenance"],a:1,e:"Requirements lead to architecture: choosing the MCU and deciding what is done in hardware and in software."},
+{q:"Which bus shares two wires between several devices and selects them by address?",o:["UART","SPI","I²C","JTAG"],a:2,e:"I²C uses SDA and SCL with 7- or 10-bit addresses. SPI uses a chip-select per slave; UART is point to point."},
+{q:"Why does I²C need pull-up resistors?",o:["To increase speed only","Because its drivers are open-drain and can only pull low","To reduce clock frequency","To isolate devices"],a:1,e:"Open-drain outputs cannot drive high; the resistors pull the line to V_DD when released."},
+{q:"Priority inversion in an RTOS is commonly solved by:",o:["Priority inheritance","Disabling interrupts forever","Increasing stack size","Lowering the clock"],a:0,e:"A low-priority task holding a mutex temporarily inherits the priority of the waiting high-priority task."},
+{q:"A 5 kHz signal is sampled. Which sampling rate satisfies Nyquist?",o:["Above 2.5 kHz","Above 5 kHz","Above 10 kHz","Exactly 5 kHz"],a:2,e:"f_s must exceed 2 f_max = 10 kHz; in practice use more, with an anti-alias filter."},
+{q:"A brown-out reset circuit is used to:",o:["Increase ADC resolution","Hold the MCU in reset when supply voltage is too low","Count pulses","Debounce switches"],a:1,e:"Below the safe threshold, execution can be erratic; BOR holds reset until supply recovers."},
+{q:"Why should an ISR be short?",o:["Flash is small","Long ISRs delay other interrupts and raise latency","ISRs cannot call functions","Compilers forbid loops"],a:1,e:"While an ISR runs, equal or lower priority events wait, increasing latency and jitter."},
+{q:"Firmware code that must survive power-off is stored in:",o:["SRAM","CPU registers","Flash","Cache only"],a:2,e:"Flash is non-volatile. SRAM and registers lose contents without power."},
+{q:"SWD or JTAG on a board is mainly used for:",o:["Audio output","On-chip programming and debugging","Charging the battery","Clock generation"],a:1,e:"These debug interfaces allow flashing, breakpoints, single-step and memory inspection."},
+{q:"Which is the best first step when a new board does not run firmware?",o:["Rewrite the application","Check supply rails, clock and reset with a scope or meter","Add an RTOS","Increase the baud rate"],a:1,e:"Bring-up proceeds from power to clock to reset to debug connection before software is suspected."}];
+var IV=[
+["What happens from an interrupt request to the first ISR instruction?","The CPU finishes the current instruction, the controller picks the highest-priority pending interrupt, hardware stacks context (on Cortex-M: PC, PSR, R0-R3, R12, LR), fetches the vector, and branches to the ISR. Follow-up: how do you measure latency? Toggle a GPIO at ISR entry and compare with the input edge on a scope."],
+["Why use volatile, and does it make access atomic?","volatile stops the compiler from caching a variable in a register, so changes by an ISR or hardware are seen. It does not give atomicity: a 32-bit variable on an 8-bit MCU needs a critical section or disabling interrupts briefly."],
+["How do you choose between polling, interrupts and DMA?","Polling for simple, fast, predictable cases; interrupts for sporadic events and low power; DMA for bulk transfers (ADC streams, UART buffers) that would otherwise load the CPU with many ISRs."],
+["The board resets randomly in the field. How do you debug?","Check reset cause register (WDT, BOR, pin, software). Scope the supply under load for dips; review decoupling and regulator limits; check stack depth and WDT servicing; log the reset reason to non-volatile memory."],
+["UART shows garbage characters. What do you check?","Baud mismatch from the clock source (crystal versus internal RC), frame format (8N1), voltage levels (3.3 V vs RS-232), TX/RX swap, ground reference. Verify bit time on a logic analyser."],
+["Why are decoupling capacitors placed close to MCU supply pins?","Digital switching causes fast current spikes. Local capacitors supply them, limit supply ripple and EMI, and prevent resets and ADC noise. Typical: 100 nF per pin pair plus bulk capacitance."],
+["How would you reduce power in a battery-powered sensor node?","Sleep most of the time, wake on timer or interrupt, reduce clock, turn off unused peripherals, lower supply voltage where allowed, batch radio transmissions, and measure with a current analyser."],
+["Explain SPI versus I²C and when to choose each.","SPI: full-duplex, fast, one chip-select per slave, more pins. I²C: two wires, addressed, slower, open-drain with pull-ups, ideal for many low-speed sensors. Choose SPI for flash, displays and fast ADCs."],
+["How do you test an embedded device automatically in a validation lab?","Drive the device through a host script over UART, GPIO or Bluetooth; stimulate inputs, log outputs and timing, compare with expected limits, and run repeat cycles with pass/fail reporting. Instruments such as DAQ or LabVIEW can be integrated."],
+["What is priority inversion and how is it fixed?","A low-priority task holds a lock needed by a high-priority task while a medium-priority task preempts it. Fix with priority inheritance or ceiling protocols and by minimising shared resources."]];
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function build(id,data,tag){var h="";data.forEach(function(x,i){h+='<fieldset class="q" id="'+id+i+'"><legend>Q'+(i+1)+(x.d?'<span class="tag">'+x.d+'</span>':'')+'</legend><p>'+esc(x.q)+'</p>';x.o.forEach(function(o,j){h+='<label><input type="radio" name="'+id+i+'" value="'+j+'"> '+String.fromCharCode(65+j)+'. '+esc(o)+'</label>'});h+='<div class="ex"></div></fieldset>'});document.getElementById(id).innerHTML=h}
+function dataOf(id){return id=="gateQ"?GATE:TOPIC}
+function check(id,sid){var d=dataOf(id),score=0,un=0;d.forEach(function(x,i){var f=document.getElementById(id+i),s=f.querySelector("input:checked"),ex=f.querySelector(".ex");f.className="q";var ans=String.fromCharCode(65+x.a);if(!s){un++;f.className="q na";ex.innerHTML="<b>Unanswered.</b> Correct answer: "+ans+". "+esc(x.e)}else if(+s.value===x.a){score++;f.className="q ok";ex.innerHTML="<b>Correct.</b> "+esc(x.e)}else{f.className="q bad";ex.innerHTML="<b>Incorrect.</b> Correct answer: "+ans+". "+esc(x.e)}});var n=d.length;document.getElementById(sid).textContent="Score: "+score+" / "+n+" ("+Math.round(score/n*100)+"%)"+(un?" - "+un+" unanswered":"")}
+function reset(id,sid){dataOf(id).forEach(function(x,i){var f=document.getElementById(id+i);f.className="q";f.querySelectorAll("input").forEach(function(r){r.checked=false});f.querySelector(".ex").innerHTML=""});document.getElementById(sid).textContent=""}
+build("gateQ",GATE);build("topicQ",TOPIC);
+document.getElementById("ivQ").innerHTML=IV.map(function(x,i){return "<details><summary>Q"+(i+1)+". "+esc(x[0])+"</summary><p>"+esc(x[1])+"</p></details>"}).join("");
+window.addEventListener("beforeprint",function(){document.querySelectorAll("details").forEach(function(d){d.open=true})});
+</script>
+</body>
+</html>
